@@ -1,5 +1,5 @@
-import { OpenAI } from '@langchain/openai'
-import { StructuredOutputParser } from 'langchain/output_parsers'
+import { ChatOpenAI } from '@langchain/openai'
+import { StructuredOutputParser } from '@langchain/core/output_parsers'
 import { PromptTemplate } from '@langchain/core/prompts'
 import z from 'zod'
 
@@ -45,11 +45,11 @@ const getPrompt = async (content) => {
 
 const analyze = async (content: string) => {
   const input = await getPrompt(content)
-  const model = new OpenAI({ temperature: 0, model: 'gpt-3.5-turbo' })
+  const model = new ChatOpenAI({ temperature: 0, model: 'gpt-3.5-turbo' })
   const result = await model.invoke(input)
 
   try {
-    return parser.parse(result)
+    return parser.parse(result.content as string)
   } catch (err) {
     console.log(err)
   }
